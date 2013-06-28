@@ -1,15 +1,12 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , mongoose = require('mongoose');
 
 var app = express();
+
+mongoose.connect('mongodb://localhost/test');
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -27,10 +24,13 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', function(req, res){
-  res.send('The item being developed. \'<a href="/me">/me</a>\'');
+app.get('/', routes.index);
+app.get('/creear', routes.creear);
+
+//api
+app.get('/api', function(req, res){
+  res.send('Ecomm API is running.');
 });
-app.get('/me', routes.index);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
